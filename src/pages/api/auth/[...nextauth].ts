@@ -1,8 +1,6 @@
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-import { nanoid } from 'nanoid';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GithubProvider from 'next-auth/providers/github';
-import { db } from '../../../services/firebase';
+import { prisma } from '../../../services/prisma';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -15,20 +13,20 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user: { email } }) {
       try {
-        const duplicatesQuery = query(
-          collection(db, 'users'),
-          where('email', '==', email)
-        );
-        const querySnapshot = await getDocs(duplicatesQuery);
-        const [data] = querySnapshot.docs.map((doc) => doc.data());
+        const userExists = await prisma.user.findUnique({
+          where: {
+            email: email?.toString(),
+          },
+        });
 
-        if (!data) {
-          await addDoc(collection(db, 'users'), {
-            email,
-            ts: new Date(),
-            id: nanoid(),
+        if (!userExists) {
+          await prisma.user.create({
+            data: {
+              email: email!,
+            },
           });
         }
+
         return true;
       } catch {
         return false;

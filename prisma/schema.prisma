@@ -13,7 +13,7 @@ datasource db {
 
 model User {
   id          String @id @default(cuid())
-  stripeId    String?
+  stripeCustomerId    String?
   email       String @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())

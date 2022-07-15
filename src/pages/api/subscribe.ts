@@ -47,7 +47,7 @@ export default async function handler(
     billing_address_collection: 'required',
     line_items: [
       {
-        price: 'price_1LKnGaLwlCQVJ3ag8pVhCUi4',
+        price: 'price_1LLuYqLwlCQVJ3agHfBcRWOx',
         quantity: 1,
       },
     ],

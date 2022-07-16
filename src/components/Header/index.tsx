@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import { ActiveLink } from '../ActiveLink';
 import SignInButton from '../SignInButton';
 import styles from './styles.module.scss';
 
@@ -14,8 +14,12 @@ const Header = () => {
           height={30}
         />
         <nav>
-          <a className={styles.active}>Home</a>
-          <a href=''>Posts</a>
+          <ActiveLink href='/' activeClassName={styles.active}>
+            <a>Home</a>
+          </ActiveLink>
+          <ActiveLink href='/posts' activeClassName={styles.active} prefetch>
+            <a>Posts</a>
+          </ActiveLink>
         </nav>
 
         <SignInButton />

@@ -92,6 +92,4 @@ export default async function handler(
   } catch (err) {
     return res.json({ error: 'Webhook handler failed' });
   }
-
-  console.log('Evento recebido:', event);
 }

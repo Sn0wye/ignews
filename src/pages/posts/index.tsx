@@ -1,7 +1,21 @@
+import { GetStaticProps } from 'next';
 import Head from 'next/head';
+import { RichText } from 'prismic-dom';
+import { createClient } from '../../services/prismic';
 import styles from './styles.module.scss';
 
-const Posts = () => {
+type Post = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  updatedAt: string;
+};
+
+interface PostsProps {
+  posts: Post[];
+}
+
+const Posts = ({ posts }: PostsProps) => {
   return (
     <>
       <Head>
@@ -10,30 +24,13 @@ const Posts = () => {
 
       <main className={styles.container}>
         <div className={styles.postList}>
-          <a href='#'>
-            <time>March, 12, 2021</time>
-            <strong>Creating a Monorepo with Lerna & Yarn Workspaces</strong>
-            <p>
-              In this guide, you will learn how to create a Monorepo to manage
-              multiple packages with a shared build, test, and release process.
-            </p>
-          </a>
-          <a href='#'>
-            <time>March, 12, 2021</time>
-            <strong>Creating a Monorepo with Lerna & Yarn Workspaces</strong>
-            <p>
-              In this guide, you will learn how to create a Monorepo to manage
-              multiple packages with a shared build, test, and release process.
-            </p>
-          </a>
-          <a href='#'>
-            <time>March, 12, 2021</time>
-            <strong>Creating a Monorepo with Lerna & Yarn Workspaces</strong>
-            <p>
-              In this guide, you will learn how to create a Monorepo to manage
-              multiple packages with a shared build, test, and release process.
-            </p>
-          </a>
+          {posts.map((post) => (
+            <a href='#' key={post.slug}>
+              <time>{post.updatedAt}</time>
+              <strong>{post.title}</strong>
+              <p>{post.excerpt}</p>
+            </a>
+          ))}
         </div>
       </main>
     </>
@@ -41,3 +38,35 @@ const Posts = () => {
 };
 
 export default Posts;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = createClient();
+
+  const posts = await prismic.getAllByType('post');
+
+  const parsedPosts = posts.map((post) => {
+    return {
+      slug: post.uid,
+      title: RichText.asText(post.data.title),
+      excerpt:
+        post.data.content.find((content: any) => content.type === 'paragraph')
+          ?.text ?? '',
+      updatedAt: new Date(post.last_publication_date).toLocaleDateString(
+        'en-US',
+        {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }
+      ),
+    };
+  });
+
+  console.log(posts);
+
+  return {
+    props: {
+      posts: parsedPosts,
+    },
+  };
+};

@@ -12,7 +12,7 @@ const SignInButton = () => {
       className={styles.signInButton}
       onClick={() => signOut()}
     >
-      <FaGithub color='#04d361' />
+      <FaGithub color='#61dafb' />
       {session.user?.name}
       <FiX color='#737380' className={styles.closeIcon} />
     </button>

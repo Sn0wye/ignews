@@ -45,9 +45,9 @@ export default Posts;
 export const getStaticProps: GetStaticProps = async () => {
   const prismic = createClient();
 
-  const posts = await prismic.getAllByType('post');
+  const response = await prismic.getAllByType('post');
 
-  const parsedPosts = posts.map((post) => {
+  const posts = response.map((post) => {
     return {
       slug: post.uid,
       title: RichText.asText(post.data.title),
@@ -65,11 +65,9 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   });
 
-  console.log(posts);
-
   return {
     props: {
-      posts: parsedPosts,
+      posts,
     },
   };
 };

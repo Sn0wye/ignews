@@ -12,9 +12,20 @@ datasource db {
 }
 
 model User {
-  id          String @id @default(cuid())
-  stripeCustomerId    String?
-  email       String @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
+  id               String         @id @default(cuid())
+  stripeCustomerId String?        @unique
+  email            String         @unique
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @default(now())
+  Subscription     Subscription[]
+}
+
+model Subscription {
+  id        String   @id
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  status    String
+  priceId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }

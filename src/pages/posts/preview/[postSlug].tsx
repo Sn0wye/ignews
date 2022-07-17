@@ -26,6 +26,7 @@ const PostPreview = ({ post }: PostPreviewProps) => {
     if (session?.activeSubscription) {
       router.push(`/posts/${post.slug}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   return (
@@ -56,7 +57,7 @@ const PostPreview = ({ post }: PostPreviewProps) => {
 
 export default PostPreview;
 
-export const getStaticPaths: GetStaticPaths = () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
     fallback: 'blocking',

@@ -48,8 +48,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const postSlug = params?.postSlug;
 
-  console.log(session);
-
   if (!session?.activeSubscription) {
     return {
       redirect: {
